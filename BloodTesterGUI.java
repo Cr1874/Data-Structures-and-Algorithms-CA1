@@ -4,16 +4,25 @@
  */
 package bloodtestscheduler;
 
+import java.util.LinkedList;
+import java.util.Queue;
+import javax.swing.JOptionPane;
+
+
 /**
  *
  * @author Conno
  */
 public class BloodTesterGUI extends javax.swing.JFrame {
+    private PQManager priorityQueue;
+    private Queue<TesterApplicant> noShowQueue = new LinkedList<>(); // Track last 5 no-shows
+    private LinkedList<TesterApplicant> allPatients = new LinkedList<>(); // List of all patients
 
     /**
      * Creates new form BloodTesterGUI
      */
     public BloodTesterGUI() {
+        priorityQueue = new PQManager();
         initComponents();
     }
 
@@ -26,25 +35,70 @@ public class BloodTesterGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        wardBg = new javax.swing.ButtonGroup();
+        titleLbl = new javax.swing.JLabel();
+        nameLbl = new javax.swing.JLabel();
+        dobLbl = new javax.swing.JLabel();
+        priorityLbl = new javax.swing.JLabel();
+        gpDetailsLbl = new javax.swing.JLabel();
+        wardLbl = new javax.swing.JLabel();
+        nextBtn = new javax.swing.JButton();
+        addBtn = new javax.swing.JButton();
+        queueBtn = new javax.swing.JButton();
+        nameTf = new javax.swing.JTextField();
+        priorityTf = new javax.swing.JTextField();
+        dobTf = new javax.swing.JTextField();
+        gpDetailsTf = new javax.swing.JTextField();
+        yesRb = new javax.swing.JRadioButton();
+        noRb = new javax.swing.JRadioButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        queueTa = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Schedule for bloods test.");
+        titleLbl.setText("Schedule for bloods test.");
 
-        jLabel2.setText("Name:");
+        nameLbl.setText("Name:");
 
-        jLabel3.setText("DOB:");
+        dobLbl.setText("DOB:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        priorityLbl.setText("Priority:");
+
+        gpDetailsLbl.setText("GP deatails:");
+
+        wardLbl.setText("Are you coming from the hospital ward?:");
+
+        nextBtn.setText("Next App");
+
+        addBtn.setText("Add App");
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                addBtnActionPerformed(evt);
             }
         });
+
+        queueBtn.setText("Show Queue");
+        queueBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                queueBtnActionPerformed(evt);
+            }
+        });
+
+        gpDetailsTf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gpDetailsTfActionPerformed(evt);
+            }
+        });
+
+        wardBg.add(yesRb);
+        yesRb.setText("Yes");
+
+        wardBg.add(noRb);
+        noRb.setText("No");
+
+        queueTa.setColumns(20);
+        queueTa.setRows(5);
+        jScrollPane1.setViewportView(queueTa);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -53,37 +107,142 @@ public class BloodTesterGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(124, 124, 124)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
+                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(135, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(wardLbl)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(priorityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(priorityTf, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(nameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(nameTf, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(dobLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(dobTf, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(gpDetailsLbl)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(gpDetailsTf, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(8, 8, 8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(yesRb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(noRb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(addBtn)
+                                .addGap(18, 18, 18)
+                                .addComponent(nextBtn)
+                                .addGap(18, 18, 18)
+                                .addComponent(queueBtn))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(120, 120, 120)
+                        .addComponent(titleLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(196, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(titleLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(dobLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dobTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(priorityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(priorityTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(gpDetailsLbl)
+                            .addComponent(gpDetailsTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(wardLbl))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(yesRb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(noRb)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addBtn)
+                    .addComponent(queueBtn)
+                    .addComponent(nextBtn))
+                .addGap(53, 53, 53))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void gpDetailsTfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gpDetailsTfActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    }//GEN-LAST:event_gpDetailsTfActionPerformed
 
+    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
+        // TODO add your handling code here:
+         try {
+            String sName = nameTf.getText();
+            String sDob = dobTf.getText();  
+            String sPriority = priorityTf.getText().trim();
+            String sGpDetails = gpDetailsTf.getText();
+            boolean isWardPat = yesRb.isSelected();
+
+            // Validate priority input
+            if (!sPriority.equalsIgnoreCase("Urgent") && !sPriority.equalsIgnoreCase("Medium") && !sPriority.equalsIgnoreCase("Low")) {
+                JOptionPane.showMessageDialog(this, "Invalid priority! Please enter 'Urgent', 'Medium', or 'Low'.", "Input Error", JOptionPane.ERROR_MESSAGE); //this will show if urgent, medium or low is not enetered.
+                return;
+            }
+
+            // Convert DOB to age for the priority queue
+            int age = calculateAge(sDob);
+
+            // Create a new TesterApplicant object
+            TesterApplicant newPatient = new TesterApplicant(sName, age, sPriority, sGpDetails, isWardPat);
+
+            // Add patient to the queue
+            priorityQueue.enqueue(newPatient);
+
+            // Display message
+            queueTa.append(sName + " (" + age + " yrs, " + sPriority + ") was added to the queue.\n");
+
+            // Clear input fields
+            nameTf.setText("");
+            dobTf.setText("");
+            priorityTf.setText(""); // Clear the priority field
+            gpDetailsTf.setText("");
+            yesRb.setSelected(false);
+            noRb.setSelected(false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Invalid input. Please check fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_addBtnActionPerformed
+
+    private void queueBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_queueBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_queueBtnActionPerformed
+
+    
+    private int calculateAge(String dob) {
+        // Simple placeholder for age calculation (use real logic as needed)
+        return 25;  // Placeholder for age calculation
+    }
     /**
      * @param args the command line arguments
      */
@@ -120,9 +279,23 @@ public class BloodTesterGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton addBtn;
+    private javax.swing.JLabel dobLbl;
+    private javax.swing.JTextField dobTf;
+    private javax.swing.JLabel gpDetailsLbl;
+    private javax.swing.JTextField gpDetailsTf;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nameLbl;
+    private javax.swing.JTextField nameTf;
+    private javax.swing.JButton nextBtn;
+    private javax.swing.JRadioButton noRb;
+    private javax.swing.JLabel priorityLbl;
+    private javax.swing.JTextField priorityTf;
+    private javax.swing.JButton queueBtn;
+    private javax.swing.JTextArea queueTa;
+    private javax.swing.JLabel titleLbl;
+    private javax.swing.ButtonGroup wardBg;
+    private javax.swing.JLabel wardLbl;
+    private javax.swing.JRadioButton yesRb;
     // End of variables declaration//GEN-END:variables
 }
