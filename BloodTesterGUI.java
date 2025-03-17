@@ -15,8 +15,10 @@ import javax.swing.JOptionPane;
  */
 public class BloodTesterGUI extends javax.swing.JFrame {
     private PQManager priorityQueue;
-    private Queue<TesterApplicant> noShowQueue = new LinkedList<>(); // Track last 5 no-shows
-    private LinkedList<TesterApplicant> allPatients = new LinkedList<>(); // List of all patients
+    //This is a linked list to store the last 5 "no show" applicants when it goes passed 5 entry applicants 
+    private Queue<TesterApplicant> noShowQueue = new LinkedList<>(); 
+    //list of all applicants or patients and there details such as there name, age etc.
+    private LinkedList<TesterApplicant> allPatients = new LinkedList<>();
 
     /**
      * Creates new form BloodTesterGUI
@@ -38,7 +40,7 @@ public class BloodTesterGUI extends javax.swing.JFrame {
         wardBg = new javax.swing.ButtonGroup();
         titleLbl = new javax.swing.JLabel();
         nameLbl = new javax.swing.JLabel();
-        dobLbl = new javax.swing.JLabel();
+        ageLbl = new javax.swing.JLabel();
         priorityLbl = new javax.swing.JLabel();
         gpDetailsLbl = new javax.swing.JLabel();
         wardLbl = new javax.swing.JLabel();
@@ -47,7 +49,7 @@ public class BloodTesterGUI extends javax.swing.JFrame {
         queueBtn = new javax.swing.JButton();
         nameTf = new javax.swing.JTextField();
         priorityTf = new javax.swing.JTextField();
-        dobTf = new javax.swing.JTextField();
+        ageTf = new javax.swing.JTextField();
         gpDetailsTf = new javax.swing.JTextField();
         yesRb = new javax.swing.JRadioButton();
         noRb = new javax.swing.JRadioButton();
@@ -60,7 +62,7 @@ public class BloodTesterGUI extends javax.swing.JFrame {
 
         nameLbl.setText("Name:");
 
-        dobLbl.setText("DOB:");
+        ageLbl.setText("Age:");
 
         priorityLbl.setText("Priority:");
 
@@ -69,6 +71,11 @@ public class BloodTesterGUI extends javax.swing.JFrame {
         wardLbl.setText("Are you coming from the hospital ward?:");
 
         nextBtn.setText("Next App");
+        nextBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextBtnActionPerformed(evt);
+            }
+        });
 
         addBtn.setText("Add App");
         addBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -124,9 +131,9 @@ public class BloodTesterGUI extends javax.swing.JFrame {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(nameTf, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(dobLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(ageLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(dobTf, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addComponent(ageTf, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(gpDetailsLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -160,8 +167,8 @@ public class BloodTesterGUI extends javax.swing.JFrame {
                     .addComponent(nameTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dobLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dobTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ageLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ageTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(priorityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -181,10 +188,11 @@ public class BloodTesterGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addBtn)
-                    .addComponent(queueBtn)
-                    .addComponent(nextBtn))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(queueBtn)
+                        .addComponent(nextBtn)))
                 .addGap(53, 53, 53))
         );
 
@@ -198,51 +206,69 @@ public class BloodTesterGUI extends javax.swing.JFrame {
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
         // TODO add your handling code here:
          try {
-            String sName = nameTf.getText();
-            String sDob = dobTf.getText();  
-            String sPriority = priorityTf.getText().trim();
-            String sGpDetails = gpDetailsTf.getText();
-            boolean isWardPat = yesRb.isSelected();
+        String sName = nameTf.getText();
+        String sAgeStr = ageTf.getText();  // Get the age as a string
+        String sPriority = priorityTf.getText().trim();
+        String sGpDetails = gpDetailsTf.getText();
+        boolean isWardPat = yesRb.isSelected();
 
-            // Validate priority input
-            if (!sPriority.equalsIgnoreCase("Urgent") && !sPriority.equalsIgnoreCase("Medium") && !sPriority.equalsIgnoreCase("Low")) {
-                JOptionPane.showMessageDialog(this, "Invalid priority! Please enter 'Urgent', 'Medium', or 'Low'.", "Input Error", JOptionPane.ERROR_MESSAGE); //this will show if urgent, medium or low is not enetered.
-                return;
-            }
-
-            // Convert DOB to age for the priority queue
-            int age = calculateAge(sDob);
-
-            // Create a new TesterApplicant object
-            TesterApplicant newPatient = new TesterApplicant(sName, age, sPriority, sGpDetails, isWardPat);
-
-            // Add patient to the queue
-            priorityQueue.enqueue(newPatient);
-
-            // Display message
-            queueTa.append(sName + " (" + age + " yrs, " + sPriority + ") was added to the queue.\n");
-
-            // Clear input fields
-            nameTf.setText("");
-            dobTf.setText("");
-            priorityTf.setText(""); // Clear the priority field
-            gpDetailsTf.setText("");
-            yesRb.setSelected(false);
-            noRb.setSelected(false);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Invalid input. Please check fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        // Validate priority input
+        if (!sPriority.equalsIgnoreCase("Urgent") && !sPriority.equalsIgnoreCase("Medium") && !sPriority.equalsIgnoreCase("Low")) {
+            JOptionPane.showMessageDialog(this, "Invalid priority! Please enter 'Urgent', 'Medium', or 'Low'.", "Input Error", JOptionPane.ERROR_MESSAGE); //this will show if urgent, medium or low is not entered.
+            return;
         }
+
+        // Parse the age string into an integer
+        int sAge = 0;  // Default value
+        try {
+            sAge = Integer.parseInt(sAgeStr);  // Convert the age string to an integer
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid number for age.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;  // Exit if age is not a valid number
+        }
+
+        // Create a new TesterApplicant object
+        TesterApplicant newPatient = new TesterApplicant(sName, sAge, sPriority, sGpDetails, isWardPat);
+
+        // Add patient to the queue
+        priorityQueue.enqueue(newPatient);
+
+        // Display message
+        queueTa.append(sName + " (" + sAge + " yrs, " + sPriority + ") was added to the queue.\n");
+
+        // Clear input fields
+        nameTf.setText("");
+        ageTf.setText("");
+        priorityTf.setText(""); // Clear the priority field
+        gpDetailsTf.setText("");
+        yesRb.setSelected(false);
+        noRb.setSelected(false);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Invalid input. Please check fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void queueBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_queueBtnActionPerformed
         // TODO add your handling code here:
+        queueTa.setText(priorityQueue.printQueue());
     }//GEN-LAST:event_queueBtnActionPerformed
 
-    
-    private int calculateAge(String dob) {
-        // Simple placeholder for age calculation (use real logic as needed)
-        return 25;  // Placeholder for age calculation
+    private void nextBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextBtnActionPerformed
+        // TODO add your handling code here:
+        TesterApplicant nextPatient = priorityQueue.dequeue();
+    if (nextPatient != null) {
+        // Add patient to no-show queue (if they don't show up)
+        if (noShowQueue.size() == 5) {
+            noShowQueue.poll();  // Remove the oldest no-show
+        }
+        noShowQueue.add(nextPatient);
+        queueTa.append("Next appointment: " + nextPatient.getDetails() + "\n");
+    } else {
+        JOptionPane.showMessageDialog(this, "No more appointments in the queue.", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
+    }//GEN-LAST:event_nextBtnActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -280,8 +306,8 @@ public class BloodTesterGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
-    private javax.swing.JLabel dobLbl;
-    private javax.swing.JTextField dobTf;
+    private javax.swing.JLabel ageLbl;
+    private javax.swing.JTextField ageTf;
     private javax.swing.JLabel gpDetailsLbl;
     private javax.swing.JTextField gpDetailsTf;
     private javax.swing.JScrollPane jScrollPane1;

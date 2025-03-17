@@ -8,6 +8,12 @@ package bloodtestscheduler;
  *
  * @author Conno
  */
-public class PQInterface {
+
+public interface PQInterface {
+    void enqueue(TesterApplicant applicant);
     
+    TesterApplicant dequeue();
+    
+    String printQueue();
 }
+
