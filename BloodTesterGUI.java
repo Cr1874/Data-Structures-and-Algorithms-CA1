@@ -57,6 +57,7 @@ public class BloodTesterGUI extends javax.swing.JFrame {
         pqueueTa = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         noShowTa = new javax.swing.JTextArea();
+        absentLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,7 +69,7 @@ public class BloodTesterGUI extends javax.swing.JFrame {
 
         priorityLbl.setText("Priority:");
 
-        gpDetailsLbl.setText("GP deatails:");
+        gpDetailsLbl.setText("GP details:");
 
         wardLbl.setText("Are you coming from the hospital ward?:");
 
@@ -113,16 +114,31 @@ public class BloodTesterGUI extends javax.swing.JFrame {
         noShowTa.setRows(5);
         jScrollPane2.setViewportView(noShowTa);
 
+        absentLbl.setText("Absentees");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(addBtn)
+                                .addGap(18, 18, 18)
+                                .addComponent(nextBtn)
+                                .addGap(18, 18, 18)
+                                .addComponent(queueBtn))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(priorityLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,29 +158,21 @@ public class BloodTesterGUI extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(gpDetailsLbl)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(gpDetailsTf, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(8, 8, 8)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(yesRb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(noRb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(37, 37, 37))))
+                                        .addComponent(gpDetailsTf, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(addBtn)
-                                .addGap(18, 18, 18)
-                                .addComponent(nextBtn)
-                                .addGap(18, 18, 18)
-                                .addComponent(queueBtn))
+                                .addContainerGap()
+                                .addComponent(wardLbl)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(wardLbl)
-                                .addGap(14, 14, 14))))
+                                .addComponent(noRb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(absentLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(77, 77, 77))
+                            .addComponent(yesRb, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(120, 120, 120)
-                        .addComponent(titleLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(titleLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -187,16 +195,23 @@ public class BloodTesterGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(gpDetailsLbl)
-                            .addComponent(gpDetailsTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(wardLbl))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(absentLbl))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(yesRb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(noRb)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(gpDetailsLbl)
+                                    .addComponent(gpDetailsTf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(yesRb)
+                                .addGap(4, 4, 4)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(wardLbl)
+                            .addComponent(noRb))
+                        .addGap(0, 11, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
@@ -269,29 +284,28 @@ public class BloodTesterGUI extends javax.swing.JFrame {
     private void nextBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextBtnActionPerformed
         // TODO add your handling code here:
     TesterApplicant nextPatient = priorityQueue.dequeue();
-    if (nextPatient != null) {
-        // Add patient to no-show queue (if they don't show up)
-        noShowQueue.add(nextPatient);
-        
-        // If there are more than 5 patients in the no-show queue, remove the oldest (FIFO)
-        if (noShowQueue.size() > 5) {
-            noShowQueue.poll();  // Removes the oldest element 
-        }
-
-        // Update the text areas
-        pqueueTa.append("Next appointment: " + nextPatient.getDetails() + "\n");
-
-        // Update the No-Show Text Area with current no-show queue
-        noShowTa.setText("");
-        for (TesterApplicant patient : noShowQueue) {
-            noShowTa.append(patient.getDetails() + "\n");
-        }
-    } else {
+    
+    if (nextPatient == null) {
         JOptionPane.showMessageDialog(null, "No more appointments in the queue.");
+        return;
+    }
+
+    // Ask if the applicant is present
+    int response = JOptionPane.showConfirmDialog(null,  "Is " + nextPatient.getName() + " present?", "Attendance Check", JOptionPane.YES_NO_OPTION); //using a built in JOPtionPane function to bring up a yes or no
+    
+    if (response == JOptionPane.NO_OPTION) {
+        // Mark as no-show
+        noShowQueue.add(nextPatient);
+        if (noShowQueue.size() > 5) noShowQueue.poll(); // Keep last 5 absentees
+
+        noShowTa.append(nextPatient.getDetails() + "\n"); // Update no-show list
+        JOptionPane.showMessageDialog(null, nextPatient.getName() + " marked as absent.");
+    } else {
+        // Show whos next to get bloods done and is in attendance.
+        JOptionPane.showMessageDialog(null, "Next appointment: " + nextPatient.getDetails());
     }
     }//GEN-LAST:event_nextBtnActionPerformed
 
-    
     /**
      * @param args the command line arguments
      */
@@ -328,6 +342,7 @@ public class BloodTesterGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel absentLbl;
     private javax.swing.JButton addBtn;
     private javax.swing.JLabel ageLbl;
     private javax.swing.JTextField ageTf;
